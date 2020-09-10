@@ -8,6 +8,9 @@ import aima.core.agent.AgentProgram;
 import aima.core.agent.Percept;
 import aima.core.agent.impl.*;
 
+import java.awt.Point;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Random;
 
 class MyAgentState
@@ -101,13 +104,19 @@ class MyAgentProgram implements AgentProgram {
 	private Random random_generator = new Random();
 	
 	// Here you can define your variables!
-	public int iterationCounter = 100;
+	private int max_width = 20;
+	private int max_height = 20;
+	public int iterationCounter = max_height*max_width*2;
 	public MyAgentState state = new MyAgentState();
 	private boolean init = true;
 	private int turnCommand = 0; // 1 -> first turn , 2 -> move forward, 3 -> second turn
 	private boolean lastTurnRight = false; // true -> right, false -> left
 	private boolean terminated = false;
-	
+	private LinkedList<Point> queue = new LinkedList<Point>(); 
+	private LinkedList<Integer> actionQueue = new LinkedList<Integer>(); 
+
+    //private HashMap<Point, LinkedList<Point>> adj = new HashMap<Point, LinkedList<Point>>(); 
+
 	// moves the Agent to a random start position
 	// uses percepts to update the Agent position - only the position, other percepts are ignored
 	// returns a random action
@@ -149,7 +158,14 @@ class MyAgentProgram implements AgentProgram {
 	    return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 	}
 	
-	
+	private Action doAction (int next, DynamicPercept p) {
+		if (next == state.ACTION_TURN_RIGHT)
+			return turnRight(p);
+		else if (next == state.ACTION_TURN_LEFT)
+			return turnLeft(p);		
+		
+		return moveForward(p);
+	}
 	
 	private Action goHome(DynamicPercept percept) {
 	    iterationCounter--;
@@ -187,7 +203,148 @@ class MyAgentProgram implements AgentProgram {
 		state.agent_last_action = state.ACTION_SUCK;
 		return LIUVacuumEnvironment.ACTION_SUCK;
 	}	
-		
+	
+	private void goToPoint (Point goal) {
+		int x_epsilon = state.agent_x_position - goal.x;
+		int y_epsilon = state.agent_y_position - goal.y;
+		switch (state.agent_direction) {
+		case MyAgentState.NORTH:
+			if (x_epsilon == 1) { // goal left
+				actionQueue.add(state.ACTION_TURN_LEFT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			else if (x_epsilon == -1) {// goal right
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			else if (y_epsilon == 1) {// goal under
+				// turn 180
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+
+			}
+			else if (y_epsilon == -1) { // goal above
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			break;
+			
+		case MyAgentState.EAST:
+			if (x_epsilon == 1) { // goal left
+				// turn 180
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+
+			}
+			else if (x_epsilon == -1) { // goal right
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			else if (y_epsilon == 1) { // goal under
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+
+			}
+			else if (y_epsilon == -1) { // goal above
+				actionQueue.add(state.ACTION_TURN_LEFT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			break;
+			
+		case MyAgentState.SOUTH:
+			if (x_epsilon == 1) { // goal left
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+
+			}
+			else if (x_epsilon == -1) { // goal right
+				actionQueue.add(state.ACTION_TURN_LEFT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			else if (y_epsilon == 1) { // goal under
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+
+			}
+			else if (y_epsilon == -1) { // goal above
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			break;
+			
+		case MyAgentState.WEST:
+			if (x_epsilon == 1) { // goal left
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			else if (x_epsilon == -1) { // goal right
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			else if (y_epsilon == 1) { // goal under
+				actionQueue.add(state.ACTION_TURN_LEFT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+
+			}
+			else if (y_epsilon == -1) { // goal above
+				actionQueue.add(state.ACTION_TURN_RIGHT);
+				actionQueue.add(state.ACTION_MOVE_FORWARD);
+			}
+			break;			
+		}		
+	}
+ 
+    // prints BFS traversal from a given source s 
+    void BFS(Point start, boolean bump) 
+    { 
+        // Mark all the vertices as not visited(By default 
+        // set as false) 
+        //LinkedList<Point> visited = new LinkedList<Point>();
+  
+        // Mark the current node as visited and enqueue it 
+        //visited.add(currentNode); 
+        queue.add(start); 
+        
+        // if the current node is not the one in top of the queue, go back
+        if (!start.equals(queue.peek())) {
+        	actionQueue.add(state.ACTION_TURN_RIGHT);
+        	actionQueue.add(state.ACTION_TURN_RIGHT);
+        	actionQueue.add(state.ACTION_MOVE_FORWARD);
+        	return;
+        }
+        	   
+        
+  
+        while (queue.size() != 0) 
+        { 
+            // Dequeue a vertex from queue and print it 
+            Point s = queue.peek(); 
+            System.out.print(s.toString()+" "); 
+  
+            // Get all adjacent vertices of the dequeued vertex s 
+            // If a adjacent has not been visited, then mark it 
+            // visited and enqueue it 
+            LinkedList<Point> adj = new LinkedList<Point>();
+            adj.add(new Point(start.x+1,start.y)); // EAST
+            adj.add(new Point(start.x,start.y+1)); // NORTH
+            adj.add(new Point(start.x-1,start.y)); // WEST
+            adj.add(new Point(start.x,start.y-1)); // SOUTH
+
+            Iterator<Point> i = adj.listIterator(); 
+            while (i.hasNext()) 
+            { 
+                Point n = i.next(); 
+                if (!bump && state.world[n.x][n.y] != state.CLEAR) // if not visited
+                { 
+                	// visit it & queue it
+                	goToPoint(n);
+                    queue.add(n); 
+                	return;
+                } 
+            }
+            queue.remove(s);
+        } 
+    } // end BFS
 	
 	@Override
 	public Action execute(Percept percept) {
@@ -263,7 +420,7 @@ class MyAgentProgram implements AgentProgram {
 	    else
 	    {
 
-	    	if (bump) {
+	    	/*if (bump) {
 	    		// check if we reach bottom right corner 
 	    		System.out.println(state.world[state.agent_x_position+1][state.agent_y_position]);
 	    		System.out.println(state.world[state.agent_x_position][state.agent_y_position + 1]);
@@ -304,11 +461,21 @@ class MyAgentProgram implements AgentProgram {
     		else {
 	    		state.agent_last_action=state.ACTION_MOVE_FORWARD;
 			    return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-			}
+			} */
+	    	
+	    	// fill action Queue with BFS
+	    	BFS(new Point(state.agent_x_position,state.agent_x_position), bump);
+	    	
+	    	System.out.println(actionQueue.toString());
     		
-    	}
+	    	if (!actionQueue.isEmpty()) {
+	    		Integer next = actionQueue.poll();
+	    		return doAction(next, (DynamicPercept)percept);
+	    	}
+    	
 
-	    
+	    }
+		return moveForward((DynamicPercept) percept); 
 	}
 }
 
