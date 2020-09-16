@@ -9,8 +9,10 @@ import aima.core.agent.Percept;
 import aima.core.agent.impl.*;
 
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 class MyAgentState
@@ -47,7 +49,7 @@ class MyAgentState
 		agent_last_action = ACTION_NONE;
 	}
 	// Based on the last action and the received percept updates the x & y agent position
-	public void updatePosition(DynamicPercept p)
+	public void updatePoint(DynamicPercept p)
 	{
 		Boolean bump = (Boolean)p.getAttribute("bump");
 
@@ -104,26 +106,24 @@ class MyAgentProgram implements AgentProgram {
 	private Random random_generator = new Random();
 	
 	// Here you can define your variables!
-	private int max_width = 20;
-	private int max_height = 20;
-	public int iterationCounter = max_height*max_width*2;
+	public int iterationCounter = 20*20*20;
 	public MyAgentState state = new MyAgentState();
 	private boolean init = true;
-	private int turnCommand = 0; // 1 -> first turn , 2 -> move forward, 3 -> second turn
-	private boolean lastTurnRight = false; // true -> right, false -> left
 	private boolean terminated = false;
 	private LinkedList<Point> queue = new LinkedList<Point>(); 
 	private LinkedList<Integer> actionQueue = new LinkedList<Integer>(); 
-
-    //private HashMap<Point, LinkedList<Point>> adj = new HashMap<Point, LinkedList<Point>>(); 
+	Map<Point, Point> previousMap = new HashMap<Point, Point>();
+	Point startPos;
+	Point homePos;
+	private int phase = 0;
 
 	// moves the Agent to a random start position
 	// uses percepts to update the Agent position - only the position, other percepts are ignored
 	// returns a random action
-	private Action moveToRandomStartPosition(DynamicPercept percept) {
+	private Action moveToRandomStartPoint(DynamicPercept percept) {
 		int action = random_generator.nextInt(6);
 		initnialRandomActions--;
-		state.updatePosition(percept);
+		state.updatePoint(percept);
 		if(action==0) {
 		    state.agent_direction = ((state.agent_direction-1) % 4);
 		    if (state.agent_direction<0) 
@@ -162,51 +162,47 @@ class MyAgentProgram implements AgentProgram {
 		if (next == state.ACTION_TURN_RIGHT)
 			return turnRight(p);
 		else if (next == state.ACTION_TURN_LEFT)
-			return turnLeft(p);		
+			return turnLeft(p);
+		
+		else if (next == state.ACTION_NONE) {
+			state.agent_last_action = state.ACTION_NONE;
+			return NoOpAction.NO_OP;
+		}
 		
 		return moveForward(p);
 	}
 	
-	private Action goHome(DynamicPercept percept) {
-	    iterationCounter--;
-		System.out.println("Going home.");
-		state.updatePosition(percept);
-		if (!(Boolean)percept.getAttribute("home")) {
-			while (state.agent_x_position != 1 ){
-				while(state.agent_direction != MyAgentState.WEST){
-					return turnRight(percept);
-				}
-				state.agent_last_action = state.ACTION_MOVE_FORWARD;
-				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-			}
-			while (state.agent_y_position != 1 ){
-				while(state.agent_direction != MyAgentState.NORTH){
-					return turnRight(percept);
-				}
-				state.agent_last_action = state.ACTION_MOVE_FORWARD;
-				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-			}
-		}
-		System.out.println("Home.");
-		
-		if (terminated) {
-			System.out.println("All cleared.");
-			state.agent_last_action = state.ACTION_NONE;
-			init = false;
-			return NoOpAction.NO_OP;			
-		}
-		
-		while(state.agent_direction != 1){
-			return turnRight(percept);
-		}
-		init = false;
-		state.agent_last_action = state.ACTION_SUCK;
-		return LIUVacuumEnvironment.ACTION_SUCK;
-	}	
 	
-	private void goToPoint (Point goal) {
-		int x_epsilon = state.agent_x_position - goal.x;
-		int y_epsilon = state.agent_y_position - goal.y;
+	private void goToPoint (Point from, Point goal) {
+ 		System.out.println("FROM : " + from.toString());
+ 		System.out.println("TO : " + goal.toString());
+ 		System.out.println("phase : "+phase);
+		int x_epsilon = from.x - goal.x;
+		int y_epsilon = from.y - goal.y;
+		
+		// if we are too far from the goal, go to previous
+		if (Math.abs(x_epsilon) > 1 || Math.abs(y_epsilon) > 1 || (Math.abs(x_epsilon) >= 1 & Math.abs(y_epsilon) >= 1)) {
+			if (phase !=2 && previousMap.containsKey(from) && previousMap.get(from) != null) { // go to start position
+				goal = previousMap.get(from);
+				if (goal.equals(startPos))
+					phase = 2;
+					
+			}
+			else { // we are at our start position, go to goal
+				while (!previousMap.get(goal).equals(from)) {
+					goal =  previousMap.get(goal);
+				}
+				
+			}
+		}
+		System.out.println(previousMap.toString());
+ 		System.out.println("FROM 2: " + from.toString());
+ 		System.out.println("TO 2 : " + goal.toString());
+		
+		// recalcul of epsilons
+		x_epsilon = from.x - goal.x;
+		y_epsilon = from.y - goal.y;
+		
 		switch (state.agent_direction) {
 		case MyAgentState.NORTH:
 			if (x_epsilon == 1) { // goal left
@@ -217,14 +213,14 @@ class MyAgentProgram implements AgentProgram {
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 			}
-			else if (y_epsilon == 1) {// goal under
+			else if (y_epsilon == -1) {// goal under
 				// turn 180
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 
 			}
-			else if (y_epsilon == -1) { // goal above
+			else if (y_epsilon == 1) { // goal above
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 			}
 			break;
@@ -235,17 +231,15 @@ class MyAgentProgram implements AgentProgram {
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
-
 			}
 			else if (x_epsilon == -1) { // goal right
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 			}
-			else if (y_epsilon == 1) { // goal under
+			else if (y_epsilon == -1) { // goal under
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
-
 			}
-			else if (y_epsilon == -1) { // goal above
+			else if (y_epsilon == 1) { // goal above
 				actionQueue.add(state.ACTION_TURN_LEFT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 			}
@@ -261,11 +255,11 @@ class MyAgentProgram implements AgentProgram {
 				actionQueue.add(state.ACTION_TURN_LEFT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 			}
-			else if (y_epsilon == 1) { // goal under
+			else if (y_epsilon == -1) { // goal under
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 
 			}
-			else if (y_epsilon == -1) { // goal above
+			else if (y_epsilon == 1) { // goal above
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
@@ -281,93 +275,197 @@ class MyAgentProgram implements AgentProgram {
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 			}
-			else if (y_epsilon == 1) { // goal under
+			else if (y_epsilon == -1) { // goal under
 				actionQueue.add(state.ACTION_TURN_LEFT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 
 			}
-			else if (y_epsilon == -1) { // goal above
+			else if (y_epsilon == 1) { // goal above
 				actionQueue.add(state.ACTION_TURN_RIGHT);
 				actionQueue.add(state.ACTION_MOVE_FORWARD);
 			}
-			break;			
-		}		
+			break;
+			
+			default :
+				break;
+		}
+		
+		System.out.println("actionQueue = " + actionQueue.toString());
+
+	}
+	
+	private boolean isWall(Point p) {
+		return (state.world[p.x][p.y] == state.WALL);
+	}
+	
+	private boolean isExplored (Point p) {
+		boolean explored = true;
+		if (state.world[p.x+1][p.y] != state.CLEAR & state.world[p.x+1][p.y] != state.WALL)
+			explored = false;
+		if (state.world[p.x-1][p.y] != state.CLEAR & state.world[p.x-1][p.y] != state.WALL)
+			explored = false;
+		if (state.world[p.x][p.y+1] != state.CLEAR & state.world[p.x][p.y+1] != state.WALL)
+			explored = false;
+		if (state.world[p.x][p.y-1] != state.CLEAR & state.world[p.x][p.y-1] != state.WALL)
+			explored = false;
+		
+		return explored;	
+		
 	}
  
-    // prints BFS traversal from a given source s 
-    void BFS(Point start, boolean bump) 
+	
+    // BFS algoritm to fill the action queue and explore the whole map
+    Action BFS(Point start, DynamicPercept percept) 
     { 
-        // Mark all the vertices as not visited(By default 
-        // set as false) 
-        //LinkedList<Point> visited = new LinkedList<Point>();
-  
-        // Mark the current node as visited and enqueue it 
-        //visited.add(currentNode); 
-        queue.add(start); 
+
+    	System.out.println("Entering BFS");
+    	
+	    Boolean home = (Boolean)percept.getAttribute("home");
+
+    	if (home == true) {
+    		homePos = start;
+    	}
+    	// initialisation, our start position should have no previous
+    	if (previousMap.isEmpty()){
+    		previousMap.put(start, null);
+    		startPos = start;
+    	}
+    	
+    	// if we have action to perform
+    	if (!actionQueue.isEmpty()) {
+    		Integer next = actionQueue.poll();
+    		return doAction(next, (DynamicPercept)percept);
+    	}
         
-        // if the current node is not the one in top of the queue, go back
-        if (!start.equals(queue.peek())) {
-        	actionQueue.add(state.ACTION_TURN_RIGHT);
-        	actionQueue.add(state.ACTION_TURN_RIGHT);
-        	actionQueue.add(state.ACTION_MOVE_FORWARD);
-        	return;
+        // else if our current position it's not explored yet, queue it
+        if (!queue.contains(start) && !isExplored(start)){ 
+            queue.add(start); 
         }
-        	   
-        
-  
+          
+
         while (queue.size() != 0) 
         { 
-            // Dequeue a vertex from queue and print it 
-            Point s = queue.peek(); 
+            Point s = queue.peek();
+            
+            // GO TO THE NODE TO EXPLORE / COME BACK TO IT
+            if (queue.size() != 0 && !start.equals(s) && !isWall(s)) {
+            	
+            	System.out.println("COMING BACK TO " + s.toString());
+            	
+                System.out.println("queue = {" + queue.toString()+"}");
+                System.out.println("startPos = {" + startPos.toString()+"}");
+
+        		goToPoint(start, s);
+            	Integer next = actionQueue.poll();
+	    		return doAction(next, (DynamicPercept)percept);
+            }
+            
+            
             System.out.print(s.toString()+" "); 
-  
-            // Get all adjacent vertices of the dequeued vertex s 
-            // If a adjacent has not been visited, then mark it 
-            // visited and enqueue it 
+            
+            // Neighbors
             LinkedList<Point> adj = new LinkedList<Point>();
-            adj.add(new Point(start.x+1,start.y)); // EAST
-            adj.add(new Point(start.x,start.y+1)); // NORTH
-            adj.add(new Point(start.x-1,start.y)); // WEST
-            adj.add(new Point(start.x,start.y-1)); // SOUTH
+            Point east = new Point(start.x+1,start.y);
+            if (!previousMap.containsKey(east)) {
+            	previousMap.put(east, start);
+            }
+            Point south = new Point(start.x,start.y+1);
+            if (!previousMap.containsKey(south)) {
+            	previousMap.put(south, start);
+            }
+
+            Point west = new Point(start.x-1,start.y);
+            if (!previousMap.containsKey(west)) {
+            	previousMap.put(west, start);
+            }
+
+            Point north = new Point(start.x,start.y-1);
+            if (!previousMap.containsKey(north)) {
+            	previousMap.put(north, start);
+            }
+        	adj.add(east);
+        	adj.add(south);
+        	adj.add(west);
+        	adj.add(north);
+         
 
             Iterator<Point> i = adj.listIterator(); 
-            while (i.hasNext()) 
-            { 
-                Point n = i.next(); 
-                if (!bump && state.world[n.x][n.y] != state.CLEAR) // if not visited
+            
+            System.out.println("adj =" + adj.toString());
+            System.out.println("map =" + previousMap.toString());
+
+            
+            // checking neighbors
+            while (i.hasNext()) { 
+                Point n = i.next();
+                // if the point is not a wall, unvisited, unqueued
+                if (state.world[n.x][n.y] != state.WALL 
+                		&& state.world[n.x][n.y] != state.CLEAR && !queue.contains(n)) 
                 { 
+                	// VISIT PART
+                	phase = 1; // we will have to come back
+                	
                 	// visit it & queue it
-                	goToPoint(n);
-                    queue.add(n); 
-                	return;
-                } 
-            }
-            queue.remove(s);
+                	System.out.println("From = " + start.toString());
+                	System.out.println("To = " + s.toString());
+                	goToPoint(start, n);
+                    queue.add(n);                    
+                    Integer next = actionQueue.poll();
+                    System.out.println("next=" + next);
+                	System.out.println("GOING to visit : " + n.toString());  
+                	
+                    System.out.println("queue = {" + queue.toString()+"}");
+                    System.out.println("startPos = {" + startPos.toString()+"}");
+                	
+    	    		// RETURN TO EXPLORE NEIGHBOUR, ie it will be marked clear
+    	    		return doAction(next, (DynamicPercept)percept);
+                } //end if
+                
+                else if (state.world[n.x][n.y] == state.WALL ) {
+                	// if we found that the position we added is a wall
+                	queue.remove(n);
+                }
+
+            } // end neighbors while
+            
+            queue.remove(s); // all neighbors checked, dequeue the the current point
+
         } 
-    } // end BFS
+        // end if queue's size is 0, ie if we are finish*
+        Point currentPos = new Point(state.agent_x_position, state.agent_y_position);
+        while (!currentPos.equals(homePos)) {
+            goToPoint(currentPos, homePos);
+            Integer next = actionQueue.poll();
+    		return doAction(next, (DynamicPercept)percept);
+    		}
+        // shutdown
+        state.agent_last_action = state.ACTION_NONE;
+        return NoOpAction.NO_OP;
+        
+	} // end BFS
 	
 	@Override
 	public Action execute(Percept percept) {
 		
 		// DO NOT REMOVE this if condition!!!
     	if (initnialRandomActions>0) {
-    		return moveToRandomStartPosition((DynamicPercept) percept);
+    		return moveToRandomStartPoint((DynamicPercept) percept);
     	} else if (initnialRandomActions==0) {
     		// process percept for the last step of the initial random actions
     		initnialRandomActions--;
-    		state.updatePosition((DynamicPercept) percept);
-			System.out.println("Processing percepts after the last execution of moveToRandomStartPosition()");
+    		state.updatePoint((DynamicPercept) percept);
+			System.out.println("Processing percepts after the last execution of moveToRandomStartPoint()");
 			state.agent_last_action=state.ACTION_SUCK;
 	    	return LIUVacuumEnvironment.ACTION_SUCK;
     	}
 		
     	// This example agent program will update the internal agent state while only moving forward.
     	// START HERE - code below should be modified!
-    	System.out.println("init= : " + init);
-    	while (init) {
-    		return goHome((DynamicPercept)percept);
-    	}
-    	    	
+//    	System.out.println("init= : " + init);
+//    	while (init) {
+//    		return goHome((DynamicPercept)percept);
+//    	}
+//    	    	
     	System.out.println("x=" + state.agent_x_position);
     	System.out.println("y=" + state.agent_y_position);
     	System.out.println("dir=" + state.agent_direction);
@@ -381,11 +479,10 @@ class MyAgentProgram implements AgentProgram {
 	    DynamicPercept p = (DynamicPercept) percept;
 	    Boolean bump = (Boolean)p.getAttribute("bump");
 	    Boolean dirt = (Boolean)p.getAttribute("dirt");
-	    Boolean home = (Boolean)p.getAttribute("home");
 	    System.out.println("percept: " + p);
 	    
 	    // State update based on the percept value and the last action
-	    state.updatePosition((DynamicPercept)percept);
+	    state.updatePoint((DynamicPercept)percept);
 	    if (bump) {
 			switch (state.agent_direction) {
 			case MyAgentState.NORTH:
@@ -419,63 +516,12 @@ class MyAgentProgram implements AgentProgram {
 	    } 
 	    else
 	    {
-
-	    	/*if (bump) {
-	    		// check if we reach bottom right corner 
-	    		System.out.println(state.world[state.agent_x_position+1][state.agent_y_position]);
-	    		System.out.println(state.world[state.agent_x_position][state.agent_y_position + 1]);
-
-	    		if (state.world[state.agent_x_position+1][state.agent_y_position] == state.WALL
-	    				&& state.world[state.agent_x_position][state.agent_y_position + 1] == state.WALL) {
-	    			terminated = true;
-	    			init = true;
-	    			while (init) {
-	    	    		return goHome((DynamicPercept)percept);
-	    	    	}	    	    	
-	    			
-	    		}
-	    		
-	    		
-    			turnCommand = 2;
-    			if(lastTurnRight) {
-    				return turnLeft((DynamicPercept)percept);
-    			}
-    			return turnRight((DynamicPercept)percept);	  		
-	    	}
-	    		
-    		if (turnCommand == 2) {
-    			turnCommand = 3;
-    			return moveForward((DynamicPercept)percept);
-    		} 
-    		else if (turnCommand == 3) {
-    			turnCommand = 0;
-    			if(lastTurnRight) {
-    				lastTurnRight = false;
-    				return turnLeft((DynamicPercept)percept);
-    			}
-    			lastTurnRight = true;
-    			return turnRight((DynamicPercept)percept);
-    		}
-    		
-
-    		else {
-	    		state.agent_last_action=state.ACTION_MOVE_FORWARD;
-			    return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-			} */
 	    	
-	    	// fill action Queue with BFS
-	    	BFS(new Point(state.agent_x_position,state.agent_x_position), bump);
+	    	System.out.println("actionQueue= " + actionQueue.toString());
 	    	
-	    	System.out.println(actionQueue.toString());
-    		
-	    	if (!actionQueue.isEmpty()) {
-	    		Integer next = actionQueue.poll();
-	    		return doAction(next, (DynamicPercept)percept);
-	    	}
-    	
-
+	    	// BFS
+	    	return BFS(new Point(state.agent_x_position,state.agent_y_position), (DynamicPercept) percept);
 	    }
-		return moveForward((DynamicPercept) percept); 
 	}
 }
 
