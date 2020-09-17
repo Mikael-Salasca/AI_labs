@@ -1,1 +1,3 @@
-# AI_lab1
+# AI_labs
+## lab1
+## lab2
