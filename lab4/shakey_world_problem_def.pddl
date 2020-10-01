@@ -1,6 +1,6 @@
 ;; This is a concrete problem formulation of the Shakey's world domain.
 
-;; Usage: ./FF-v2.3/ff -o shakey_world_domain.pdll -f shakey_world_problem_def.pdll
+;; Usage: ./FF-v2.3/ff -o shakey_world_domain.pddl -f shakey_world_problem_def.pddl
 
 (define (problem shakey_world_problem_def)
   (:domain shakey_world_domain)
