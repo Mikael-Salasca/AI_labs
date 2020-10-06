@@ -1,0 +1,219 @@
+{"act": "begin_group", "ts": 0}
+{"act": "open_list_sorting", "key_list": ["h_SINGLE", "h_(", "h_ff", "h_INSERTION_ORDER", "h_)"]}
+{"ts":0, "act": "state_update", "state_id": 0, "state": {"var0": "1(Atom is-at(s, r2))", "var1": "0(Atom is-at(b, r1))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "1(NegatedAtom is-light-on(r1))"}, "g": -1, "real_g": -1}
+{"ts": 0, "act": "evaluated_states", "state_id": 0, "preferred": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 0}
+{"ts":0, "act": "state_update", "state_id": 0, "h_ff": 7}
+{"ts": 0, "act": "evaluated_heuristics", "count": 1}
+{"act": "preferred_heuristics", "key_list": []}
+{"act": "main_heuristic", "target": "h_ff"}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 1}
+{"ts":1, "act": "state_update", "state_id": 0, "g": 0, "real_g": 0}
+{"ts": 1, "act": "expanded_states", "state_id": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 1}
+{"ts":1, "act": "state_update", "state_id": 1, "state": {"var0": "0(Atom is-at(s, r1))", "var1": "0(Atom is-at(b, r1))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "1(NegatedAtom is-light-on(r1))"}, "new_parent": [0, "moves s r2 r1 d1", 1]}
+{"ts": 1, "act": "generated_states", "state_id": 0, "op": "moves s r2 r1 d1"}
+{"ts":1, "act": "state_update", "state_id": 1, "g": -1, "real_g": -1}
+{"ts": 1, "act": "evaluated_states", "state_id": 1, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 1}
+{"ts":1, "act": "state_update", "state_id": 1, "h_ff": 7}
+{"ts": 1, "act": "evaluated_heuristics", "count": 1}
+{"ts":1, "act": "state_update", "state_id": 2, "state": {"var0": "2(Atom is-at(s, r3))", "var1": "0(Atom is-at(b, r1))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "1(NegatedAtom is-light-on(r1))"}, "new_parent": [0, "moves s r2 r3 d2", 1]}
+{"ts": 1, "act": "generated_states", "state_id": 0, "op": "moves s r2 r3 d2"}
+{"ts":1, "act": "state_update", "state_id": 2, "g": -1, "real_g": -1}
+{"ts": 1, "act": "evaluated_states", "state_id": 2, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 1}
+{"ts":1, "act": "state_update", "state_id": 2, "h_ff": 7}
+{"ts": 1, "act": "evaluated_heuristics", "count": 1}
+{"ts": 1, "act": "generated_states", "state_id": 0, "op": "moves s r2 r3 d3"}
+{"ts":1, "act": "state_update", "state_id": 2, "g": 1, "real_g": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 2}
+{"ts":2, "act": "state_update", "state_id": 1, "g": 1, "real_g": 1}
+{"ts": 2, "act": "expanded_states", "state_id": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 2}
+{"ts":2, "act": "state_update", "state_id": 0, "new_parent": [1, "moves s r1 r2 d1", 1]}
+{"ts": 2, "act": "generated_states", "state_id": 1, "op": "moves s r1 r2 d1"}
+{"ts":2, "act": "state_update", "state_id": 3, "state": {"var0": "0(Atom is-at(s, r1))", "var1": "1(Atom is-at(b, r2))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "1(NegatedAtom is-light-on(r1))"}, "new_parent": [1, "pushes_box s b r1 r2 d1", 1]}
+{"ts": 2, "act": "generated_states", "state_id": 1, "op": "pushes_box s b r1 r2 d1"}
+{"ts":2, "act": "state_update", "state_id": 3, "g": -1, "real_g": -1}
+{"ts": 2, "act": "evaluated_states", "state_id": 3, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 2}
+{"ts":2, "act": "state_update", "state_id": 3, "h_ff": 7}
+{"ts": 2, "act": "evaluated_heuristics", "count": 1}
+{"ts":2, "act": "state_update", "state_id": 4, "state": {"var0": "0(Atom is-at(s, r1))", "var1": "0(Atom is-at(b, r1))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [1, "turns_lights_on s b r1", 1]}
+{"ts": 2, "act": "generated_states", "state_id": 1, "op": "turns_lights_on s b r1"}
+{"ts":2, "act": "state_update", "state_id": 4, "g": -1, "real_g": -1}
+{"ts": 2, "act": "evaluated_states", "state_id": 4, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 2}
+{"ts":2, "act": "state_update", "state_id": 4, "h_ff": 6}
+{"ts": 2, "act": "evaluated_heuristics", "count": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 3}
+{"ts":3, "act": "state_update", "state_id": 4, "g": 2, "real_g": 2}
+{"ts": 3, "act": "expanded_states", "state_id": 4}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 3}
+{"ts":3, "act": "state_update", "state_id": 5, "state": {"var0": "1(Atom is-at(s, r2))", "var1": "0(Atom is-at(b, r1))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [4, "moves s r1 r2 d1", 1]}
+{"ts": 3, "act": "generated_states", "state_id": 4, "op": "moves s r1 r2 d1"}
+{"ts":3, "act": "state_update", "state_id": 5, "g": -1, "real_g": -1}
+{"ts": 3, "act": "evaluated_states", "state_id": 5, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 3}
+{"ts":3, "act": "state_update", "state_id": 5, "h_ff": 6}
+{"ts": 3, "act": "evaluated_heuristics", "count": 1}
+{"ts":3, "act": "state_update", "state_id": 6, "state": {"var0": "0(Atom is-at(s, r1))", "var1": "1(Atom is-at(b, r2))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [4, "pushes_box s b r1 r2 d1", 1]}
+{"ts": 3, "act": "generated_states", "state_id": 4, "op": "pushes_box s b r1 r2 d1"}
+{"ts":3, "act": "state_update", "state_id": 6, "g": -1, "real_g": -1}
+{"ts": 3, "act": "evaluated_states", "state_id": 6, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 3}
+{"ts":3, "act": "state_update", "state_id": 6, "h_ff": 5}
+{"ts": 3, "act": "evaluated_heuristics", "count": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 4}
+{"ts":4, "act": "state_update", "state_id": 6, "g": 3, "real_g": 3}
+{"ts": 4, "act": "expanded_states", "state_id": 6}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 4}
+{"ts":4, "act": "state_update", "state_id": 7, "state": {"var0": "1(Atom is-at(s, r2))", "var1": "1(Atom is-at(b, r2))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [6, "moves s r1 r2 d1", 1]}
+{"ts": 4, "act": "generated_states", "state_id": 6, "op": "moves s r1 r2 d1"}
+{"ts":4, "act": "state_update", "state_id": 7, "g": -1, "real_g": -1}
+{"ts": 4, "act": "evaluated_states", "state_id": 7, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 4}
+{"ts":4, "act": "state_update", "state_id": 7, "h_ff": 4}
+{"ts": 4, "act": "evaluated_heuristics", "count": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 5}
+{"ts":5, "act": "state_update", "state_id": 7, "g": 4, "real_g": 4}
+{"ts": 5, "act": "expanded_states", "state_id": 7}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 5}
+{"ts":5, "act": "state_update", "state_id": 6, "new_parent": [7, "moves s r2 r1 d1", 1]}
+{"ts": 5, "act": "generated_states", "state_id": 7, "op": "moves s r2 r1 d1"}
+{"ts":5, "act": "state_update", "state_id": 8, "state": {"var0": "2(Atom is-at(s, r3))", "var1": "1(Atom is-at(b, r2))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [7, "moves s r2 r3 d2", 1]}
+{"ts": 5, "act": "generated_states", "state_id": 7, "op": "moves s r2 r3 d2"}
+{"ts":5, "act": "state_update", "state_id": 8, "g": -1, "real_g": -1}
+{"ts": 5, "act": "evaluated_states", "state_id": 8, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 5}
+{"ts":5, "act": "state_update", "state_id": 8, "h_ff": 4}
+{"ts": 5, "act": "evaluated_heuristics", "count": 1}
+{"ts": 5, "act": "generated_states", "state_id": 7, "op": "moves s r2 r3 d3"}
+{"ts":5, "act": "state_update", "state_id": 8, "g": 5, "real_g": 5}
+{"ts":5, "act": "state_update", "state_id": 5, "new_parent": [7, "pushes_box s b r2 r1 d1", 1]}
+{"ts": 5, "act": "generated_states", "state_id": 7, "op": "pushes_box s b r2 r1 d1"}
+{"ts":5, "act": "state_update", "state_id": 5, "g": 3, "real_g": 3}
+{"ts":5, "act": "state_update", "state_id": 9, "state": {"var0": "1(Atom is-at(s, r2))", "var1": "2(Atom is-at(b, r3))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "1(NegatedAtom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [7, "pushes_box s b r2 r3 d2", 1]}
+{"ts": 5, "act": "generated_states", "state_id": 7, "op": "pushes_box s b r2 r3 d2"}
+{"ts":5, "act": "state_update", "state_id": 9, "g": -1, "real_g": -1}
+{"ts": 5, "act": "evaluated_states", "state_id": 9, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 5}
+{"ts":5, "act": "state_update", "state_id": 9, "h_ff": 4}
+{"ts": 5, "act": "evaluated_heuristics", "count": 1}
+{"ts":5, "act": "state_update", "state_id": 10, "state": {"var0": "1(Atom is-at(s, r2))", "var1": "1(Atom is-at(b, r2))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [7, "turns_lights_on s b r2", 1]}
+{"ts": 5, "act": "generated_states", "state_id": 7, "op": "turns_lights_on s b r2"}
+{"ts":5, "act": "state_update", "state_id": 10, "g": -1, "real_g": -1}
+{"ts": 5, "act": "evaluated_states", "state_id": 10, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 5}
+{"ts":5, "act": "state_update", "state_id": 10, "h_ff": 3}
+{"ts": 5, "act": "evaluated_heuristics", "count": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 6}
+{"ts":6, "act": "state_update", "state_id": 10, "g": 5, "real_g": 5}
+{"ts": 6, "act": "expanded_states", "state_id": 10}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 6}
+{"ts":6, "act": "state_update", "state_id": 11, "state": {"var0": "0(Atom is-at(s, r1))", "var1": "1(Atom is-at(b, r2))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [10, "moves s r2 r1 d1", 1]}
+{"ts": 6, "act": "generated_states", "state_id": 10, "op": "moves s r2 r1 d1"}
+{"ts":6, "act": "state_update", "state_id": 11, "g": -1, "real_g": -1}
+{"ts": 6, "act": "evaluated_states", "state_id": 11, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 6}
+{"ts":6, "act": "state_update", "state_id": 11, "h_ff": 4}
+{"ts": 6, "act": "evaluated_heuristics", "count": 1}
+{"ts":6, "act": "state_update", "state_id": 12, "state": {"var0": "2(Atom is-at(s, r3))", "var1": "1(Atom is-at(b, r2))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [10, "moves s r2 r3 d2", 1]}
+{"ts": 6, "act": "generated_states", "state_id": 10, "op": "moves s r2 r3 d2"}
+{"ts":6, "act": "state_update", "state_id": 12, "g": -1, "real_g": -1}
+{"ts": 6, "act": "evaluated_states", "state_id": 12, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 6}
+{"ts":6, "act": "state_update", "state_id": 12, "h_ff": 3}
+{"ts": 6, "act": "evaluated_heuristics", "count": 1}
+{"ts": 6, "act": "generated_states", "state_id": 10, "op": "moves s r2 r3 d3"}
+{"ts":6, "act": "state_update", "state_id": 12, "g": 6, "real_g": 6}
+{"ts":6, "act": "state_update", "state_id": 13, "state": {"var0": "1(Atom is-at(s, r2))", "var1": "0(Atom is-at(b, r1))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [10, "pushes_box s b r2 r1 d1", 1]}
+{"ts": 6, "act": "generated_states", "state_id": 10, "op": "pushes_box s b r2 r1 d1"}
+{"ts":6, "act": "state_update", "state_id": 13, "g": -1, "real_g": -1}
+{"ts": 6, "act": "evaluated_states", "state_id": 13, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 6}
+{"ts":6, "act": "state_update", "state_id": 13, "h_ff": 5}
+{"ts": 6, "act": "evaluated_heuristics", "count": 1}
+{"ts":6, "act": "state_update", "state_id": 14, "state": {"var0": "1(Atom is-at(s, r2))", "var1": "2(Atom is-at(b, r3))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [10, "pushes_box s b r2 r3 d2", 1]}
+{"ts": 6, "act": "generated_states", "state_id": 10, "op": "pushes_box s b r2 r3 d2"}
+{"ts":6, "act": "state_update", "state_id": 14, "g": -1, "real_g": -1}
+{"ts": 6, "act": "evaluated_states", "state_id": 14, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 6}
+{"ts":6, "act": "state_update", "state_id": 14, "h_ff": 2}
+{"ts": 6, "act": "evaluated_heuristics", "count": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 7}
+{"ts":7, "act": "state_update", "state_id": 14, "g": 6, "real_g": 6}
+{"ts": 7, "act": "expanded_states", "state_id": 14}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 7}
+{"ts":7, "act": "state_update", "state_id": 15, "state": {"var0": "0(Atom is-at(s, r1))", "var1": "2(Atom is-at(b, r3))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [14, "moves s r2 r1 d1", 1]}
+{"ts": 7, "act": "generated_states", "state_id": 14, "op": "moves s r2 r1 d1"}
+{"ts":7, "act": "state_update", "state_id": 15, "g": -1, "real_g": -1}
+{"ts": 7, "act": "evaluated_states", "state_id": 15, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 7}
+{"ts":7, "act": "state_update", "state_id": 15, "h_ff": 3}
+{"ts": 7, "act": "evaluated_heuristics", "count": 1}
+{"ts":7, "act": "state_update", "state_id": 16, "state": {"var0": "2(Atom is-at(s, r3))", "var1": "2(Atom is-at(b, r3))", "var2": "1(NegatedAtom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [14, "moves s r2 r3 d2", 1]}
+{"ts": 7, "act": "generated_states", "state_id": 14, "op": "moves s r2 r3 d2"}
+{"ts":7, "act": "state_update", "state_id": 16, "g": -1, "real_g": -1}
+{"ts": 7, "act": "evaluated_states", "state_id": 16, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 7}
+{"ts":7, "act": "state_update", "state_id": 16, "h_ff": 1}
+{"ts": 7, "act": "evaluated_heuristics", "count": 1}
+{"ts": 7, "act": "generated_states", "state_id": 14, "op": "moves s r2 r3 d3"}
+{"ts":7, "act": "state_update", "state_id": 16, "g": 7, "real_g": 7}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 8}
+{"ts": 8, "act": "expanded_states", "state_id": 16}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 8}
+{"ts":8, "act": "state_update", "state_id": 14, "new_parent": [16, "moves s r3 r2 d2", 1]}
+{"ts": 8, "act": "generated_states", "state_id": 16, "op": "moves s r3 r2 d2"}
+{"ts": 8, "act": "generated_states", "state_id": 16, "op": "moves s r3 r2 d3"}
+{"ts":8, "act": "state_update", "state_id": 12, "new_parent": [16, "pushes_box s b r3 r2 d2", 1]}
+{"ts": 8, "act": "generated_states", "state_id": 16, "op": "pushes_box s b r3 r2 d2"}
+{"ts":8, "act": "state_update", "state_id": 17, "state": {"var0": "2(Atom is-at(s, r3))", "var1": "2(Atom is-at(b, r3))", "var2": "0(Atom is-light-on(r3))", "var3": "0(Atom is-light-on(r2))", "var4": "0(Atom is-light-on(r1))"}, "new_parent": [16, "turns_lights_on s b r3", 1]}
+{"ts": 8, "act": "generated_states", "state_id": 16, "op": "turns_lights_on s b r3"}
+{"ts":8, "act": "state_update", "state_id": 17, "g": -1, "real_g": -1}
+{"ts": 8, "act": "evaluated_states", "state_id": 17, "preferred": 0}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 8}
+{"ts":8, "act": "state_update", "state_id": 17, "h_ff": 0}
+{"ts": 8, "act": "evaluated_heuristics", "count": 1}
+{"act": "end_group"}
+{"act": "begin_group", "ts": 9}
+{"ts":9, "act": "state_update", "state_id": 17, "g": 8, "real_g": 8}
+{"ts": 9, "act": "expanded_states", "state_id": 17}
+{"act": "end_group"}
+{"ts": 9, "act": "plan_found", "state_ids": [0, 1, 4, 6, 7, 10, 14, 16, 17]}
