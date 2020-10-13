@@ -10,6 +10,7 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="Main"/>
+<stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="QLearning"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-filepath ./files/ -startfile ./tutorial_level.xml"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="QLearning"/>
 </launchConfiguration>
