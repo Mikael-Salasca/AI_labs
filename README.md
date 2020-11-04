@@ -4,3 +4,4 @@
 ## lab3 - Bayesian Networks
 ## lab4 - Planning 
 ## lab5 - Reinforcement Learning
+## lab6 - Deep Learning
